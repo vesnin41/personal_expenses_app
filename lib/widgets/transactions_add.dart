@@ -7,6 +7,16 @@ class TransactionsAdd extends StatelessWidget {
 
   TransactionsAdd({this.addNewTransaction});
 
+  void submitData() {
+    String submitTitle = _controllerTitle.text;
+    double submitAmount = double.parse(_controllerAmount.text);
+
+    if (submitTitle.isNotEmpty && submitAmount>=0) {
+      addNewTransaction(submitTitle, submitAmount);
+      _clear();
+    }
+  }
+
   void _clear() {
     _controllerTitle.clear();
     _controllerAmount.clear();
@@ -25,11 +35,13 @@ class TransactionsAdd extends StatelessWidget {
               controller: _controllerTitle,
               decoration: InputDecoration(labelText: 'Title'),
               keyboardType: TextInputType.text,
+              onSubmitted: (_) => submitData,
             ),
             TextField(
               controller: _controllerAmount,
               decoration: InputDecoration(labelText: 'Amount'),
               keyboardType: TextInputType.number,
+              onSubmitted: (_) => submitData,
             ),
             FlatButton(
               child: Text(
@@ -37,10 +49,7 @@ class TransactionsAdd extends StatelessWidget {
                 style: TextStyle(color: Colors.purple),
               ),
               onPressed: () {
-                print('Added');
-                addNewTransaction(_controllerTitle.text,
-                    double.parse(_controllerAmount.text));
-                _clear();
+                submitData();
               },
             )
           ],

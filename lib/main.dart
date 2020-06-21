@@ -21,6 +21,12 @@ class ExpensesApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('ExpensesApp'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => print("add"),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -38,6 +44,11 @@ class ExpensesApp extends StatelessWidget {
             UserTransactions(),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => print("FAB tap"),
       ),
     );
   }
