@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expenses_app/widgets/transactions_list.dart';
 
-import './widgets/user_transactions.dart';
+import './widgets/transactions_add.dart';
+import './widgets/transactions_add.dart';
+import './models/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,11 +14,58 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ExpensesApp(),
+      theme: ThemeData(primaryColor: Colors.purple, accentColor: Colors.amber),
     );
   }
 }
 
-class ExpensesApp extends StatelessWidget {
+class ExpensesApp extends StatefulWidget {
+  @override
+  _ExpensesAppState createState() => _ExpensesAppState();
+}
+
+class _ExpensesAppState extends State<ExpensesApp> {
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'New T-shirt',
+      amount: 99.99,
+      date: DateTime.now(),
+    ),
+  ];
+
+  void _addNewTransaction(String textTx, double amountTx) {
+    Transaction newTransaction = Transaction(
+        title: textTx,
+        amount: amountTx,
+        date: DateTime.now(),
+        id: DateTime.now().toString());
+
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return GestureDetector(
+            onTap: () {},
+            child: TransactionsAdd(
+              addNewTransaction: _addNewTransaction,
+            ),
+            behavior: HitTestBehavior.opaque,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +74,7 @@ class ExpensesApp extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => print("add"),
+            onPressed: () => _startAddNewTransaction(context),
           )
         ],
       ),
@@ -38,17 +88,19 @@ class ExpensesApp extends StatelessWidget {
               child: Card(
                 child: Text('Card1'),
                 elevation: 3,
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
               ),
             ),
-            UserTransactions(),
+            TransactionList(
+              transactionsList: _transactions,
+            ),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => print("FAB tap"),
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }
