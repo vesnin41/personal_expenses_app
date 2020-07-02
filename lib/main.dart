@@ -3,6 +3,7 @@ import 'package:personal_expenses_app/widgets/transactions_list.dart';
 
 import './widgets/transactions_add.dart';
 import './widgets/transactions_add.dart';
+import './widgets/chart.dart';
 import './models/transaction.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.purple,
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
-        ),
+      ),
     );
   }
 }
@@ -30,6 +31,12 @@ class ExpensesApp extends StatefulWidget {
 
 class _ExpensesAppState extends State<ExpensesApp> {
   final List<Transaction> _transactions = [];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   void _addNewTransaction(String textTx, double amountTx) {
     Transaction newTransaction = Transaction(
@@ -74,14 +81,7 @@ class _ExpensesAppState extends State<ExpensesApp> {
 //          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Text('Card1'),
-                elevation: 3,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(
               transactionsList: _transactions,
             ),
