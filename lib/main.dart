@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.purple,
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
+        buttonColor: Colors.white,
       ),
     );
   }
@@ -38,11 +39,11 @@ class _ExpensesAppState extends State<ExpensesApp> {
     }).toList();
   }
 
-  void _addNewTransaction(String textTx, double amountTx) {
+  void _addNewTransaction(String textTx, double amountTx, DateTime dateTx) {
     Transaction newTransaction = Transaction(
         title: textTx,
         amount: amountTx,
-        date: DateTime.now(),
+        date: dateTx == null ? DateTime.now() : dateTx,
         id: DateTime.now().toString());
 
     setState(() {
@@ -62,6 +63,12 @@ class _ExpensesAppState extends State<ExpensesApp> {
             behavior: HitTestBehavior.opaque,
           );
         });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
+    });
   }
 
   @override
@@ -84,6 +91,7 @@ class _ExpensesAppState extends State<ExpensesApp> {
             Chart(_recentTransactions),
             TransactionList(
               transactionsList: _transactions,
+              deleteFunc: _deleteTransaction,
             ),
           ],
         ),

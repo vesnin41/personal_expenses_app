@@ -5,7 +5,8 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactionsList;
-  TransactionList({this.transactionsList});
+  final Function deleteFunc;
+  TransactionList({this.transactionsList, this.deleteFunc});
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +30,30 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (context, index) {
                 return Card(
-                  elevation: 3,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                          width: 2.0,
-                          color: Theme.of(context).primaryColor,
-                        )),
-                        child: Text(
-                          "\$${transactionsList[index].amount}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20.0),
-                        ),
+                  elevation: 5.0,
+                  margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FittedBox(
+                            child: Text("\$${transactionsList[index].amount}")),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              transactionsList[index].title,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16.0),
-                            ),
-                            Text(
-                              DateFormat.yMMMMd()
-                                  .format(transactionsList[index].date),
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12.0),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                      radius: 30.0,
+                    ),
+                    title: Text(
+                      transactionsList[index].title,
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                        "${DateFormat.yMMMd().format(transactionsList[index].date)}"),
+                    trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).errorColor,
+                        onPressed: () {
+                          deleteFunc(transactionsList[index].id);
+                        }),
                   ),
                 );
               },
